@@ -26,6 +26,10 @@ node {
 	def props = readProperties  file: 'nightly.properties'
 	def tomcat_home = props['TOMCAT_HOME']
 	def patches_url = props['PATCHES_URL']
+	def db_name = props['DB_NAME']
+	def service_name = props['SERVICE_NAME']
+	def db_user = env.getEnvironment().get('DB_USER_${SERVICE_NAME}')
+	def db_pass = env.getEnvironment().get('DB_PASS_${SERVICE_NAME}')
 
 	// Get the patches url's from a well-known place (etherpad, gist, gdoc,...)
 	stage ('Get Patches') {
@@ -66,12 +70,18 @@ node {
 	// Now build server
 	stage ('Build Server') {
 		dir ('sakai') {
-			// mvn
+			// Build main code
+			withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
+				sh "mvn clean install -B -V -DskipTests=true -Dmaven.javadoc.skip=true"
+			}
 			// Recover if fail
 			for (int i=0; i<contribs.size(); i++) {
 				ghurlbch = contribs[i].split(':')
 				dir(ghurlbch[0]) {
-					// mvn
+					// Build contrib tool
+					withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
+						sh "mvn clean install -B -V -DskipTests=true -Dmaven.javadoc.skip=true"
+					}
 				}
 			}
 		}			
@@ -80,9 +90,21 @@ node {
 	// Now Stop server
 	stage ('Stop Server') {
 		// Stop server
+		sh 'sudo service ${service_name} stop'
 		// Drop Database
+		sh 'database.sh ${db_name} ${db_user} ${db_pass} ${service_name} drop'
 		// Purge server files
+		sh 'rm -rf ${tomcat_home}/webapps'
+		sh 'rm -rf ${tomcat_home}/lib'
+		sh 'mkdir ${tomcat_home}/lib'
+		sh 'cp ${tomcat_home}/../tomcatlib/* ${tomcat_home}/lib/.'
+		sh 'rm -rf ${tomcat_home}/components'
+		sh 'rm -rf ${tomcat_home}/logs/*'
+		sh 'rm -rf ${tomcat_home}/temp/*'
+		sh 'rm -rf ${tomcat_home}/work/*'
+		sh 'rm -rf /var/log/httpd/*.${service_name}.*.log'
 		// Create Database
+		sh 'database.sh ${db_name} ${db_user} ${db_pass} ${service_name} create'
 		// Create Sakai Properties
 	}   	
 	   	
@@ -90,14 +112,32 @@ node {
 	stage ('Deploy to Server') {
 		// Deploy sakai core
 		dir ('sakai') {
-			// mvn sakai:deploy
-			withMaven
-			// Deploy each contrib tool
-			// Deploy mysql driver
+			// Deploy sakai core
+			withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
+				sh "mvn sakai:deploy -Dmaven.tomcat.home=${tomcat_home}"
+			}
+			// Recover if fail
+			for (int i=0; i<contribs.size(); i++) {
+				ghurlbch = contribs[i].split(':')
+				dir(ghurlbch[0]) {
+					// Build contrib tool
+					withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
+						sh "mvn sakai:deploy -Dmaven.tomcat.home=${tomcat_home}"
+					}
+				}
+			}
+			dir ('kernel/deploy/common') {
+				// Deploy sakai core
+				withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
+					sh "mvn -Pmysql sakai:deploy -Dmaven.tomcat.home=${tomcat_home}"
+				}
+			}
 		}
 	}
 	   	
 	stage ('Start Server') {
+		// Start server
+		sh 'sudo service ${service_name} start'
 	}
 	
 }
