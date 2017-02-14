@@ -3,6 +3,8 @@ properties([[$class: 'BuildDiscarderProperty',
                 ])
 node {
 
+	def workspace = pwd()
+
 	// First checkout the code
 	stage ('Checkout') {
 		// Checkout the source from sakai-nightly.
@@ -35,12 +37,12 @@ node {
 		dir ('sakai') {
 			// Deploy sakai core
 			withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
-				sh "mvn sakai:deploy -Dmaven.tomcat.home=docker/sakai/tomcat"
+				sh "mvn sakai:deploy -Dmaven.tomcat.home=${workspace}/docker/sakai/tomcat"
 			}
 			dir ('kernel/deploy/common') {
 				// Deploy sakai core
 				withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
-					sh "mvn -Pmysql sakai:deploy -Dmaven.tomcat.home=docker/sakai/tomcat"
+					sh "mvn -Pmysql sakai:deploy -Dmaven.tomcat.home=${workspace}/docker/sakai/tomcat"
 				}
 			}
 		}

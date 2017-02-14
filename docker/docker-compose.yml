@@ -1,0 +1,11 @@
+jenkins:
+   build: .
+   volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /usr/bin/docker:/usr/bin/docker
+     - /usr/local/bin/docker-compose
+   ports:
+     - "80:8080"
+   env_file:
+     - variables.env
+     

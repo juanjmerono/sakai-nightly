@@ -1,15 +1,30 @@
 # Sakai Nightly Pipeline
+
 Keep a test server updated.
 This project allows you to use a Jenkins server to install a sakai server for testing purposes.
 
 # Installation
-- Install Docker.
-- Install a Jenkins 2.x server with pipeline plugins (default installation).
-- Add _Pipeline Utility_ Steps plugin.
-- Add _HTML Publisher_ plugin.
-- Add _Pipeline Maven Integration Plugin_ plugin.
-- Create a Multibranch Pipeline job in Jenkins.
-- Set this repo url as source url (or your own fork).
+
+You can run this pipeline with your own jenkins (2.x) server or deploy a custom jenkins with docker. If you use your own Jenkins you have to:
+
+	- Add some plugins (see the complete list in docker/plugins.txt)
+	- Add Maven3 and jdk8 tools.
+	- Provide a docker installation accesible from jenkins.
+
+If you want to deploy a custom jenkins server you only need docker/docker-compose installed and follow this steps:
+
+	- Clone this repo.
+	- Go to docker folder.
+	- Add some oracle credentials in `variables.env` file in order to download jdk8.
+		- ORACLE_USER=xxx
+		- ORACLE_PASS=yyy
+	- Type `docker-compose up -d`
 
 # Run
-After running master and 11.x branch, you'll have one file for each LOCALE with the patch to apply in Sakai in order to update translations. The job only export reviewed translations from transifex.
+
+After jenkins server is up you just have to create a Multibranch Pipeline Job to get a Sakai nightly server up and running.
+
+	- Access to Jenkins server (admin/admin).
+	- Create Multibranch Pipeline Job using this repo as git source.
+	
+ 
