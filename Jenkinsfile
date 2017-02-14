@@ -1,9 +1,7 @@
+properties([[$class: 'BuildDiscarderProperty',
+                strategy: [$class: 'LogRotator', numToKeepStr: '5']],
+                ])
 node {
-
-	// Clean the workspace
-	stage ('Cleanup') {
-		step([$class: 'WsCleanup'])
-	}
 
 	// First checkout the code
 	stage ('Checkout') {

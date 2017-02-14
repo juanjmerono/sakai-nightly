@@ -7,6 +7,7 @@ This project allows you to use a Jenkins server to install a sakai server for te
 - Install a Jenkins 2.x server with pipeline plugins (default installation).
 - Add _Pipeline Utility_ Steps plugin.
 - Add _HTML Publisher_ plugin.
+- Add _Pipeline Maven Integration Plugin_ plugin.
 - Create a Multibranch Pipeline job in Jenkins.
 - Set this repo url as source url (or your own fork).
 
