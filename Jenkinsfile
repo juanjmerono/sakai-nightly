@@ -51,7 +51,7 @@ node {
 	stage ('Start Server') {
 		// Start server
 		dir ('docker/sakai') {
-			sh 'docker-compose up -d'
+			sh 'sudo docker-compose up -d'
 		}
 	}
 	
