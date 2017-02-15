@@ -18,6 +18,7 @@ If you want to deploy a custom jenkins server you only need docker/docker-compos
 	- Add some oracle credentials in `variables.env` file in order to download jdk8.
 		- ORACLE_USER=xxx
 		- ORACLE_PASS=yyy
+	- Ensure that you have /var/jenkins_home folder with permisions for UID 1000 (container jenkins user)
 	- Type `docker-compose up -d`
 
 # Run
