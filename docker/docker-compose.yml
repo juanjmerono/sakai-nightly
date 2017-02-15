@@ -6,7 +6,17 @@ jenkins:
      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
      - /var/jenkins_home:/var/jenkins_home
    ports:
-     - "80:8080"
+     - "127.0.0.1:8080:8080"
+   environment:
+     - VIRTUAL_HOST=jenkins.sakainightly.es
+     - VIRTUAL_PROTO=http
+     - VIRTUAL_PORT=8080
    env_file:
      - variables.env
-     
+
+nginx-proxy:
+   image: jwilder/nginx-proxy
+   ports:
+     - "80:80"
+   volumes:
+     - "/var/run/docker.sock:/tmp/docker.sock:ro"
