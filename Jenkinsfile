@@ -4,11 +4,7 @@ properties([[$class: 'BuildDiscarderProperty',
 node {
 
 	def workspace = pwd()
-
-	// Clean the workspace
-	stage ('Cleanup') {
-		step([$class: 'WsCleanup'])
-	}
+	def today = Calendar.getInstance()
 
 	// First checkout the code
 	stage ('Checkout') {
@@ -37,7 +33,14 @@ node {
 		// Stop server 
 		dir ('docker-sakai') {
 			sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' stop'
-			sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' rm'
+			// Remove database on monday
+			if (today.get(Calendar.DAY_OF_WEEK)==1) {
+				sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' rm'
+			}
+			dir ('tomcat') {
+				// Clean tomcat deployment
+				sh 'rm -rf *'
+			}
 		}
 		// remove exited containers:
 		sh 'sudo docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v'
@@ -68,7 +71,7 @@ node {
 		// Start the new server
 		dir ('docker-sakai') {
 			withEnv(['SAKAI_SERVER_NAME=' + env.BRANCH_NAME + '.sakainightly.es']) {
-				sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' up -d'
+				sh 'sudo -E docker-compose -p ' + env.BRANCH_NAME + ' up -d --force-recreate'
 			}
 		}
 	}

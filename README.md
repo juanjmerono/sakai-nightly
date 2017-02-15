@@ -13,7 +13,7 @@ To deploy your custom jenkins server you only need docker/docker-compose install
 		- ORACLE_USER=xxx
 		- ORACLE_PASS=yyy
 	- Ensure that you have /var/jenkins_home folder with permisions for UID 1000 (container jenkins user)
-	- Type `docker-compose up -d`
+	- Type `docker-compose -p nightly up -d`
 
 # Run
 
