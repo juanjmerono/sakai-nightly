@@ -31,6 +31,20 @@ node {
 		}			
 	}   	
 
+	stage ('Stop and clean') {
+		// Stop server 
+		dir ('docker/sakai') {
+			sh 'sudo docker-compose stop'
+			sh 'sudo docker-compose rm'
+		}
+		// remove exited containers:
+		sh 'sudo docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v'
+		// remove unused images:
+		sh 'sudo docker images --no-trunc | grep \'<none>\' | awk \'{ print $3 }\' | xargs -r docker rmi'
+		// remove unused volumes:
+		sh 'sudo docker volume ls -qf dangling=true | xargs -r docker volume rm'
+	}
+
 	// Now deploy server
 	stage ('Deploy Sakai Core') {
 		// Deploy sakai core
@@ -49,7 +63,7 @@ node {
 	}
 
 	stage ('Start Server') {
-		// Start server
+		// Start the new server
 		dir ('docker/sakai') {
 			sh 'sudo docker-compose up -d'
 		}
