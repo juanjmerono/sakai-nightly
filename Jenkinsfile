@@ -5,6 +5,11 @@ node {
 
 	def workspace = pwd()
 
+	// Clean the workspace
+	stage ('Cleanup') {
+		step([$class: 'WsCleanup'])
+	}
+
 	// First checkout the code
 	stage ('Checkout') {
 		// Checkout the source from sakai-nightly.
