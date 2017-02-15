@@ -18,7 +18,7 @@ node {
 
 	stage ('Checkout Sakai Core') {
 		dir ('docker') {
-			git ( [url: 'https://github.com/juanjmerono/docker-sakai.git', branch: env.BRANCH_NAME] )
+			git ( [url: 'https://github.com/juanjmerono/docker-sakai.git', branch: 'nightly'] )
 		}
 	   	// Checkout code from sakai repository
 	   	dir('sakai') {
