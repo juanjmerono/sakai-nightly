@@ -1,20 +1,14 @@
 # Sakai Nightly Pipeline
 
 Keep a test server updated.
-This project allows you to use a Jenkins server to install a sakai server for testing purposes.
+This project creates a Jenkins installation with a Multibranch Pipeline Job, that deploy some test servers for Sakai.
 
 # Installation
 
-You can run this pipeline with your own jenkins (2.x) server or deploy a custom jenkins with docker. If you use your own Jenkins you have to:
-
-	- Add some plugins (see the complete list in docker/plugins.txt)
-	- Add Maven3 and jdk8 tools.
-	- Provide a docker installation accesible from jenkins.
-
-If you want to deploy a custom jenkins server you only need docker/docker-compose installed and follow this steps:
+To deploy your custom jenkins server you only need docker/docker-compose installed and follow this steps:
 
 	- Clone this repo.
-	- Go to docker folder.
+	- Go to `docker-jenkins` folder.
 	- Add some oracle credentials in `variables.env` file in order to download jdk8.
 		- ORACLE_USER=xxx
 		- ORACLE_PASS=yyy

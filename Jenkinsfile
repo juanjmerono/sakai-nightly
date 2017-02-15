@@ -17,9 +17,6 @@ node {
 	}
 
 	stage ('Checkout Sakai Core') {
-		dir ('docker') {
-			git ( [url: 'https://github.com/juanjmerono/docker-sakai.git', branch: 'nightly'] )
-		}
 	   	// Checkout code from sakai repository
 	   	dir('sakai') {
 	   		git ( [url: 'https://github.com/sakaiproject/sakai.git', branch: env.BRANCH_NAME] )
@@ -38,9 +35,9 @@ node {
 
 	stage ('Stop and clean') {
 		// Stop server 
-		dir ('docker/sakai') {
-			sh 'sudo docker-compose stop'
-			sh 'sudo docker-compose rm'
+		dir ('docker-sakai') {
+			sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' stop'
+			sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' rm'
 		}
 		// remove exited containers:
 		sh 'sudo docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v'
@@ -56,12 +53,12 @@ node {
 		dir ('sakai') {
 			// Deploy sakai core
 			withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
-				sh "mvn sakai:deploy -Dmaven.tomcat.home=${workspace}/docker/sakai/tomcat"
+				sh "mvn sakai:deploy -Dmaven.tomcat.home=${workspace}/docker-sakai/tomcat"
 			}
 			dir ('kernel/deploy/common') {
 				// Deploy sakai core
 				withMaven(maven:'Maven3',jdk:'jdk8',mavenOpts:'-Xmx768m -XX:MaxPermSize=512m -XX:NewSize=256m') {
-					sh "mvn -Pmysql sakai:deploy -Dmaven.tomcat.home=${workspace}/docker/sakai/tomcat"
+					sh "mvn -Pmysql sakai:deploy -Dmaven.tomcat.home=${workspace}/docker-sakai/tomcat"
 				}
 			}
 		}
@@ -69,8 +66,10 @@ node {
 
 	stage ('Start Server') {
 		// Start the new server
-		dir ('docker/sakai') {
-			sh 'sudo docker-compose up -d'
+		dir ('docker-sakai') {
+			withEnv(['SAKAI_SERVER_NAME=' + env.BRANCH_NAME + '.sakainightly.es']) {
+				sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' up -d'
+			}
 		}
 	}
 	

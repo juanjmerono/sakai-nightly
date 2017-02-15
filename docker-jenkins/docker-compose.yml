@@ -14,8 +14,9 @@ jenkins:
    env_file:
      - variables.env
 
-nginx-proxy:
+nginx:
    image: jwilder/nginx-proxy
+   container_name: 
    ports:
      - "80:80"
    volumes:

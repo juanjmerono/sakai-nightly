@@ -1,0 +1,2 @@
+export SAKAI_HOME=/usr/local/tomcat
+export JAVA_OPTS='-server -Xms512m -Xmx1280m -XX:MaxMetaspaceSize=512m -XX:NewSize=192m -XX:MaxNewSize=384m -Djava.awt.headless=true -Dhttp.agent=Sakai -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false -Dsun.lang.ClassLoader.allowArraySyntax=true -Dfile.encoding=UTF-8 -Dsakai.home=$SAKAI_HOME/sakai -Dsakai.components.root=$SAKAI_HOME/components -Dsakai.security=$SAKAI_HOME/sakai -Dsakai.demo=true -Duser.language=es -Duser.region=ES'

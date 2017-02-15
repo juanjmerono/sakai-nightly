@@ -1,2 +1,3 @@
 /.project
-/variables.env
+docker-jenkins/variables.env
+docker-sakai/tomcat
