@@ -16,7 +16,6 @@ jenkins:
 
 nginx:
    image: jwilder/nginx-proxy
-   container_name: 
    ports:
      - "80:80"
    volumes:
