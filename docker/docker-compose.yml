@@ -6,7 +6,7 @@ jenkins:
      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
      - /var/jenkins_home:/var/jenkins_home
    ports:
-     - "127.0.0.1:8080:8080"
+     - "8080"
    environment:
      - VIRTUAL_HOST=jenkins.sakainightly.es
      - VIRTUAL_PROTO=http
