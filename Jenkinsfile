@@ -1,5 +1,6 @@
 properties([[$class: 'BuildDiscarderProperty',
                 strategy: [$class: 'LogRotator', numToKeepStr: '5']],
+                pipelineTriggers([cron('@midnight')]),
                 ])
 node {
 
