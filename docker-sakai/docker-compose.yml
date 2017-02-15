@@ -20,7 +20,7 @@ app:
    # In development this means we can read files without anything special
    SAKAI_USER: root
    CATALINA_OPTS_EXTRA: -Dsakai.demo=true
-   VIRTUAL_HOST: master.sakainightly.es
+   VIRTUAL_HOST: ${SAKAI_SERVER_NAME}
    VIRTUAL_PROTO: http
    VIRTUAL_PORT: 8080
   links:
