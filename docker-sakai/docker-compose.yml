@@ -1,9 +1,10 @@
-app:
+sakai:
   image: tomcat:8.0.28-jre8
   ports:
    - "8080"
    - "8025"
   volumes:
+   # Sakai folders and files
    - ./tomcat/lib:/usr/local/tomcat/sakai-lib
    - ./tomcat/components:/usr/local/tomcat/components
    - ./tomcat/webapps:/usr/local/tomcat/webapps
@@ -15,7 +16,9 @@ app:
    - ./entrypoint.sh:/usr/local/tomcat/bin/entrypoint.sh
    - ./server.xml:/usr/local/tomcat/conf/server.xml
    - ./context.xml:/usr/local/tomcat/conf/context.xml
-  command: bash -c "entrypoint.sh && catalina.sh run"
+   - ./wait-for-it.sh:/usr/local/tomcat/bin/wait-for-it.sh
+  #command: bash -c "entrypoint.sh && catalina.sh run"
+  command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "bash", "-c", "entrypoint.sh && catalina.sh run"]
   environment:
    # In development this means we can read files without anything special
    SAKAI_USER: root
@@ -23,10 +26,12 @@ app:
    VIRTUAL_HOST: ${SAKAI_SERVER_NAME}
    VIRTUAL_PROTO: http
    VIRTUAL_PORT: 8080
+  depends_on:
+   - dbmysql
   links:
-   - db
+   - dbmysql
 
-db:
+dbmysql:
   image: mysql:5.6.27
   environment:
     MYSQL_ROOT_PASSWORD: 
