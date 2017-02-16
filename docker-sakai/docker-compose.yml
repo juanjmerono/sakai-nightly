@@ -1,5 +1,6 @@
 version: '3'
-sakai:
+services:
+ sakai:
   image: tomcat:8.0.28-jre8
   ports:
    - "8080"
@@ -29,10 +30,8 @@ sakai:
    VIRTUAL_PORT: 8080
   depends_on:
    - dbmysql
-  links:
-   - dbmysql
 
-dbmysql:
+ dbmysql:
   image: mysql:5.6.27
   environment:
     MYSQL_ROOT_PASSWORD: 
