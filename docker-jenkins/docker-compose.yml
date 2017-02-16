@@ -1,10 +1,8 @@
 jenkins:
    build: .
    volumes:
-     # nginx volumes
-     - /var/run/docker.sock:/var/run/docker.sock
-     - ./certs:/etc/nginx/certs
      # docker share volumes
+     - /var/run/docker.sock:/var/run/docker.sock
      - /usr/bin/docker:/usr/bin/docker
      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
      # jenkins share volumes
@@ -21,6 +19,9 @@ jenkins:
 
 nginx:
    image: jwilder/nginx-proxy
+   volumes:
+     # nginx volumes
+     - ./certs:/etc/nginx/certs
    ports:
      - "80:80"
      - "443:443"
