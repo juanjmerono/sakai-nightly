@@ -20,7 +20,7 @@ services:
    - ./context.xml:/usr/local/tomcat/conf/context.xml
    - ./wait-for-it.sh:/usr/local/tomcat/bin/wait-for-it.sh
   #command: bash -c "entrypoint.sh && catalina.sh run"
-  command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "bash", "-c", "entrypoint.sh && catalina.sh run"]
+  command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "/bin/bash", "-c", "entrypoint.sh && catalina.sh run"]
   environment:
    # In development this means we can read files without anything special
    SAKAI_USER: root
