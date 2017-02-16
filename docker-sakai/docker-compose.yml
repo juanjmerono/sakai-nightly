@@ -1,3 +1,4 @@
+version: '3'
 sakai:
   image: tomcat:8.0.28-jre8
   ports:

@@ -14,6 +14,18 @@ def jobDslScript = """
 	        }
 	    }
 	}
+	multibranchPipelineJob('SakaiTransifexPipeline') {
+	    branchSources {
+	        git {
+	            remote('https://github.com/juanjmerono/sakai-translations.git')
+	        }
+	    }
+	    orphanedItemStrategy {
+	        discardOldItems {
+	            numToKeep(0)
+	        }
+	    }
+	}
 """
 def workspace = new File('.')
 
