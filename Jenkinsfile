@@ -40,7 +40,8 @@ node {
 			}
 			dir ('tomcat') {
 				// Clean tomcat deployment
-				sh 'rm -rf *'
+				// Tomcat decompress war with root user
+				sh 'sudo rm -rf *'
 			}
 		}
 		// remove exited containers:
