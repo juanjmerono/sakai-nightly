@@ -22,5 +22,9 @@ fi
 if ! grep -q sakai "/usr/local/tomcat/conf/catalina.properties"; then
  sed -i.orig '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' /usr/local/tomcat/conf/catalina.properties
 fi
-# Then run tomcat
-catalina.sh run
+# Then run tomcat if vars are available, else bash shell
+if [[ -n "${DBMYSQL_ENV_MYSQL_DATABASE}" && -n "${DBMYSQL_ENV_MYSQL_USER}" && -n "${DBMYSQL_ENV_MYSQL_PASSWORD}" ]]; then
+ catalina.sh run
+else
+ bash
+fi
