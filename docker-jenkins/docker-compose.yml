@@ -1,6 +1,4 @@
-version: '3'
-services:
- jenkins:
+jenkins:
    build: .
    volumes:
      # docker share volumes
@@ -19,7 +17,7 @@ services:
      # VIRTUAL_HOST (for jenkins), SERVER_NAME_<branch> (for each test server)
      - variables.env
 
- nginx:
+nginx:
    image: jwilder/nginx-proxy
    volumes:
      # nginx volumes
