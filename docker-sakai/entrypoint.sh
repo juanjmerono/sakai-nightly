@@ -18,6 +18,9 @@ password@javax.sql.BaseDataSource=${DB_ENV_MYSQL_PASSWORD}
 
 EOF
 fi
+# This modify catalina.propertis adding sakai lib folder
 if ! grep -q sakai "/usr/local/tomcat/conf/catalina.properties"; then
  sed -i.orig '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' /usr/local/tomcat/conf/catalina.properties
 fi
+# Then run tomcat
+catalina.sh run
