@@ -22,26 +22,25 @@ services:
    #command: bash -c "entrypoint.sh && catalina.sh run"
    command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "/bin/bash", "-c", "entrypoint.sh"]
    environment:
-    # In development this means we can read files without anything special
-    - SAKAI_USER: root
-    - CATALINA_OPTS_EXTRA: -Dsakai.demo=true
-    - VIRTUAL_HOST: ${SAKAI_SERVER_NAME}
-    - VIRTUAL_PROTO: http
-    - VIRTUAL_PORT: 8080
-    - DB_USER: sakai
-    - DB_PASS: sakai
-    - DB_NAME: sakai
+    - SAKAI_USER=root
+    - CATALINA_OPTS_EXTRA=-Dsakai.demo=true
+    - VIRTUAL_HOST=${SAKAI_SERVER_NAME}
+    - VIRTUAL_PROTO=http
+    - VIRTUAL_PORT=8080
+    - DB_USER=sakai
+    - DB_PASS=sakai
+    - DB_NAME=sakai
    links:
     - dbmysql
 
  dbmysql:
    image: mysql:5.6.27
    environment:
-    - MYSQL_ROOT_PASSWORD: 
-    - MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    - MYSQL_USER: sakai
-    - MYSQL_PASSWORD: sakai
-    - MYSQL_DATABASE: sakai
+    - MYSQL_ROOT_PASSWORD= 
+    - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
+    - MYSQL_USER=sakai
+    - MYSQL_PASSWORD=sakai
+    - MYSQL_DATABASE=sakai
    command:
     - --character-set-server=utf8
    ports:
