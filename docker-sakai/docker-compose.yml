@@ -1,43 +1,48 @@
-sakai:
-  image: tomcat:8.0.28-jre8
-  ports:
-   - "8080"
-   - "8025"
-  volumes:
-   # Sakai folders and files
-   - ./tomcat/lib:/usr/local/tomcat/sakai-lib
-   - ./tomcat/components:/usr/local/tomcat/components
-   - ./tomcat/webapps:/usr/local/tomcat/webapps
-   - ./placeholder.properties:/usr/local/tomcat/sakai/placeholder.properties
-   - ./sakai.quartz.properties:/usr/local/tomcat/sakai/sakai.quartz.properties
-   - ./log4j.properties:/usr/local/tomcat/sakai/log4j.properties
-   - ./local.properties:/usr/local/tomcat/sakai/local.properties
-   - ./setenv.sh:/usr/local/tomcat/bin/setenv.sh
-   - ./entrypoint.sh:/usr/local/tomcat/bin/entrypoint.sh
-   - ./server.xml:/usr/local/tomcat/conf/server.xml
-   - ./context.xml:/usr/local/tomcat/conf/context.xml
-   - ./wait-for-it.sh:/usr/local/tomcat/bin/wait-for-it.sh
-  #command: bash -c "entrypoint.sh && catalina.sh run"
-  command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "/bin/bash", "-c", "entrypoint.sh"]
-  environment:
-   # In development this means we can read files without anything special
-   SAKAI_USER: root
-   CATALINA_OPTS_EXTRA: -Dsakai.demo=true
-   VIRTUAL_HOST: ${SAKAI_SERVER_NAME}
-   VIRTUAL_PROTO: http
-   VIRTUAL_PORT: 8080
-  links:
-   - dbmysql
+version: '3'
+services:
+ sakai:
+   image: tomcat:8.0.28-jre8
+   ports:
+    - "8080"
+    - "8025"
+   volumes:
+    # Sakai folders and files
+    - ./tomcat/lib:/usr/local/tomcat/sakai-lib
+    - ./tomcat/components:/usr/local/tomcat/components
+    - ./tomcat/webapps:/usr/local/tomcat/webapps
+    - ./placeholder.properties:/usr/local/tomcat/sakai/placeholder.properties
+    - ./sakai.quartz.properties:/usr/local/tomcat/sakai/sakai.quartz.properties
+    - ./log4j.properties:/usr/local/tomcat/sakai/log4j.properties
+    - ./local.properties:/usr/local/tomcat/sakai/local.properties
+    - ./setenv.sh:/usr/local/tomcat/bin/setenv.sh
+    - ./entrypoint.sh:/usr/local/tomcat/bin/entrypoint.sh
+    - ./server.xml:/usr/local/tomcat/conf/server.xml
+    - ./context.xml:/usr/local/tomcat/conf/context.xml
+    - ./wait-for-it.sh:/usr/local/tomcat/bin/wait-for-it.sh
+   #command: bash -c "entrypoint.sh && catalina.sh run"
+   command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "/bin/bash", "-c", "entrypoint.sh"]
+   environment:
+    # In development this means we can read files without anything special
+    - SAKAI_USER: root
+    - CATALINA_OPTS_EXTRA: -Dsakai.demo=true
+    - VIRTUAL_HOST: ${SAKAI_SERVER_NAME}
+    - VIRTUAL_PROTO: http
+    - VIRTUAL_PORT: 8080
+    - DB_USER: sakai
+    - DB_PASS: sakai
+    - DB_NAME: sakai
+   links:
+    - dbmysql
 
-dbmysql:
-  image: mysql:5.6.27
-  environment:
-    MYSQL_ROOT_PASSWORD: 
-    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    MYSQL_USER: sakai
-    MYSQL_PASSWORD: sakai
-    MYSQL_DATABASE: sakai
-  command:
-   - --character-set-server=utf8
-  ports:
-   - "3306"
+ dbmysql:
+   image: mysql:5.6.27
+   environment:
+    - MYSQL_ROOT_PASSWORD: 
+    - MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    - MYSQL_USER: sakai
+    - MYSQL_PASSWORD: sakai
+    - MYSQL_DATABASE: sakai
+   command:
+    - --character-set-server=utf8
+   ports:
+    - "3306"
