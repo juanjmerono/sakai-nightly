@@ -28,7 +28,7 @@ services:
    VIRTUAL_HOST: ${SAKAI_SERVER_NAME}
    VIRTUAL_PROTO: http
    VIRTUAL_PORT: 8080
-  depends_on:
+  links:
    - dbmysql
 
  dbmysql:
