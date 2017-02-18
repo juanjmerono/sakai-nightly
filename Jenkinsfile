@@ -13,8 +13,11 @@ node {
 		checkout scm
 	}
 
-	// Read appropiate server name
+	// Read appropiate server name and other stuff
 	def server_name = env.getProperty('SERVER_NAME_'+env.BRANCH_NAME)
+	def sakai_db_user = env.getProperty('SAKAI_DB_USER')
+	def sakai_db_pass = env.getProperty('SAKAI_DB_PASS')
+	def sakai_db_name = env.getProperty('SAKAI_DB_NAME')
 
 	if (server_name!=null) {
 
@@ -71,7 +74,10 @@ node {
 		stage ('Start Server') {
 			// Start the new server
 			dir ('docker-sakai') {
-				withEnv(['SAKAI_SERVER_NAME=' + server_name ]) {
+				withEnv(['SAKAI_SERVER_NAME=' + server_name,
+						 'SAKAI_DB_USER=' + sakai_db_user,
+						 'SAKAI_DB_PASS=' + sakai_db_pass,
+						 'SAKAI_DB_NAME=' + sakai_db_name]) {
 					sh 'sudo -E docker-compose -p ' + env.BRANCH_NAME + ' up -d --force-recreate'
 				}
 			}

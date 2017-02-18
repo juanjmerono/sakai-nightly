@@ -1,28 +1,35 @@
-jenkins:
-   build: .
-   volumes:
-     # docker share volumes
-     - /var/run/docker.sock:/var/run/docker.sock
-     - /usr/bin/docker:/usr/bin/docker
-     - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
-     # jenkins share volumes
-     - /var/jenkins_home:/var/jenkins_home
-   ports:
-     - "8080"
-   environment:
-     - VIRTUAL_PROTO=http
-     - VIRTUAL_PORT=8080
-   env_file:
-     # Use this file to set Oracle Credentials and all server names
-     # VIRTUAL_HOST (for jenkins), SERVER_NAME_<branch> (for each test server)
-     - variables.env
+version: '3'
+networks:
+  sakai:  
+services:
+  jenkins:
+    build: .
+    networks:
+      - sakai
+    volumes:
+      # docker share volumes
+      - /var/run/docker.sock:/var/run/docker.sock
+      # jenkins share volumes
+      - /var/jenkins_home:/var/jenkins_home
+    ports:
+      - "8080"
+    environment:
+      - VIRTUAL_PROTO=http
+      - VIRTUAL_PORT=8080
+    env_file:
+      # Use this file to set Oracle Credentials and all server names
+      # VIRTUAL_HOST (for jenkins), SERVER_NAME_<branch> (for each test server)
+      # SAKAI_DB configuration, see sample_variables.env for more
+      - variables.env
 
-nginx:
-   image: jwilder/nginx-proxy
-   volumes:
-     # nginx volumes
-     - "./certs:/etc/nginx/certs"
-     - "/var/run/docker.sock:/tmp/docker.sock:ro"
-   ports:
-     - "80:80"
-     - "443:443"
+  nginx:
+    image: jwilder/nginx-proxy
+    networks:
+      - sakai
+    volumes:
+      # nginx volumes
+      - "./certs:/etc/nginx/certs"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    ports:
+      - "80:80"
+      - "443:443"
