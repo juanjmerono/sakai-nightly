@@ -10,12 +10,13 @@ services:
       # docker share volumes
       - /var/run/docker.sock:/var/run/docker.sock
       # jenkins share volumes
-      - jenkinsvol:/var/jenkins_home
+      - /opt/jenkins_home:/opt/jenkins_home
     ports:
       - "8080"
     environment:
       - VIRTUAL_PROTO=http
       - VIRTUAL_PORT=8080
+      - JENKINS_HOME=/opt/jenkins_home
     env_file:
       # Use this file to set Oracle Credentials and all server names
       # VIRTUAL_HOST (for jenkins), SERVER_NAME_<branch> (for each test server)
@@ -33,6 +34,3 @@ services:
     ports:
       - "80:80"
       - "443:443"
-
-volumes:
-  jenkinsvol: {}

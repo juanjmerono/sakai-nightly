@@ -41,10 +41,11 @@ node {
 		stage ('Stop and clean') {
 			// Stop server 
 			dir ('docker-sakai') {
-				sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' stop'
 				// Remove database on monday
 				if (today.get(Calendar.DAY_OF_WEEK)==1) {
-					sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' rm -f -v'
+					sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' down -v'
+				} else {
+					sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' stop'
 				}
 				dir ('tomcat') {
 					// Clean tomcat deployment

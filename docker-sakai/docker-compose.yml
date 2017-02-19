@@ -14,17 +14,13 @@ services:
       - ./tomcat/lib:/usr/local/tomcat/sakai-lib
       - ./tomcat/components:/usr/local/tomcat/components
       - ./tomcat/webapps:/usr/local/tomcat/webapps
-      - ./tomcat/sakai/placeholder.properties:/usr/local/tomcat/sakai/placeholder.properties
-      - ./tomcat/sakai/sakai.quartz.properties:/usr/local/tomcat/sakai/sakai.quartz.properties
-      - ./tomcat/sakai/log4j.properties:/usr/local/tomcat/sakai/log4j.properties
-      - ./tomcat/sakai/local.properties:/usr/local/tomcat/sakai/local.properties
+      - ./tomcat/sakai:/usr/local/tomcat/sakai
       - ./tomcat/conf/server.xml:/usr/local/tomcat/conf/server.xml
       - ./tomcat/conf/context.xml:/usr/local/tomcat/conf/context.xml
       - ./tomcat/bin/setenv.sh:/usr/local/tomcat/bin/setenv.sh
       - ./tomcat/bin/entrypoint.sh:/usr/local/tomcat/bin/entrypoint.sh
       - ./tomcat/bin/wait-for-it.sh:/usr/local/tomcat/bin/wait-for-it.sh
-    command: bash -c "catalina.sh run"
-    #command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "/bin/bash", "-c", "entrypoint.sh"]
+    command: ["/usr/local/tomcat/bin/wait-for-it.sh", "--timeout=5", "dbmysql:3306", "--", "/bin/bash", "-c", "entrypoint.sh"]
     environment:
       - SAKAI_USER=root
       - CATALINA_OPTS_EXTRA=-Dsakai.demo=true
