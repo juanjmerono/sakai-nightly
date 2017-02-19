@@ -12,7 +12,7 @@ hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 validationQuery@javax.sql.BaseDataSource=select 1 from DUAL
 testOnBorrow@javax.sql.BaseDataSource=false
 defaultTransactionIsolationString@javax.sql.BaseDataSource=TRANSACTION_READ_COMMITTED
-url@javax.sql.BaseDataSource=jdbc:mysql://db:3306/${DB_NAME}?characterEncoding=UTF-8&useServerPrepStmts=false&cachePrepStmts=true&prepStmtCacheSize=4096&prepStmtCacheSqlLimit=4096
+url@javax.sql.BaseDataSource=jdbc:mysql://dbmysql:3306/${DB_NAME}?characterEncoding=UTF-8&useServerPrepStmts=false&cachePrepStmts=true&prepStmtCacheSize=4096&prepStmtCacheSqlLimit=4096
 username@javax.sql.BaseDataSource=${DB_USER}
 password@javax.sql.BaseDataSource=${DB_PASS}
 
