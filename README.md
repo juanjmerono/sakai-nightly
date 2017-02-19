@@ -22,7 +22,9 @@ To deploy your custom jenkins server you only need docker/docker-compose install
 	- Add certs folder with all certificates for all servers if you want to use ssl.
 		- jenkins.mydomain.crt,jenkins.mydomain.key,mybranch.mydomain.crt,...
 		- If you don't want SSL at all add HTTPS_METHOD=nohttps in variables.env
-	- Ensure that you have /var/jenkins_home folder with permisions for UID 1000 (container jenkins user)
+	- Ensure that you have /opt/jenkins_home and /opt/jenkins folders with permisions for UID 1000 (container jenkins user)
+		- The `jenkins_home` will contain every job workspace. 
+		- The `jenkins` folder will contain the .m2 repository.
 	- Type `docker-compose -p nightly up -d`
 		- `nightly` name is important, the network is based on that name.
 

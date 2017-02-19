@@ -9,8 +9,9 @@ services:
     volumes:
       # docker share volumes
       - /var/run/docker.sock:/var/run/docker.sock
-      # jenkins share volumes
+      # jenkins share volumes (jenkinsci home, and jenkins user home)
       - /opt/jenkins_home:/opt/jenkins_home
+      - /opt/jenkins:/var/jenkins_home
     ports:
       - "8080"
     environment:
