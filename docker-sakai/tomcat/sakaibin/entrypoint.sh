@@ -21,6 +21,9 @@ fi
 # This modify catalina.propertis adding sakai lib folder
 if ! grep -q sakai "/usr/local/tomcat/conf/catalina.properties"; then
  sed -i.orig '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' /usr/local/tomcat/conf/catalina.properties
+ cp /usr/local/tomcat/sakaibin/setenv.sh /usr/local/tomcat/bin/setenv.sh
+ cp /usr/local/tomcat/sakaiconf/context.xml /usr/local/tomcat/conf/context.xml
+ cp /usr/local/tomcat/sakaiconf/server.xml /usr/local/tomcat/conf/server.xml
 fi
 # Then run tomcat if vars are available, else bash shell
 if [[ -n "${DB_NAME}" && -n "${DB_USER}" && -n "${DB_PASS}" ]]; then

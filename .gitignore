@@ -1,4 +1,6 @@
 /.project
 docker-jenkins/variables.env
 docker-jenkins/certs
-docker-sakai/tomcat
+docker-sakai/tomcat/lib
+docker-sakai/tomcat/webapps
+docker-sakai/tomcat/components

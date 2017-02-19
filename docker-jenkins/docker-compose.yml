@@ -10,7 +10,7 @@ services:
       # docker share volumes
       - /var/run/docker.sock:/var/run/docker.sock
       # jenkins share volumes
-      - /var/jenkins_home:/var/jenkins_home
+      - jenkinsvol:/var/jenkins_home
     ports:
       - "8080"
     environment:
@@ -33,3 +33,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
+
+volumes:
+  jenkinsvol: {}

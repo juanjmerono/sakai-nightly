@@ -48,8 +48,9 @@ node {
 				}
 				dir ('tomcat') {
 					// Clean tomcat deployment
-					// Tomcat decompress war with root user
-					sh 'sudo rm -rf *'
+					sh 'sudo rm -rf lib'
+					sh 'sudo rm -rf components'
+					sh 'sudo rm -rf webapps'
 				}
 			}
 		}
