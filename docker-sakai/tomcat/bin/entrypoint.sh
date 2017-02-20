@@ -20,11 +20,13 @@ EOF
 fi
 # This modify catalina.propertis adding sakai lib folder
 if ! grep -q sakai "/usr/local/tomcat/conf/catalina.properties"; then
- sed -i.orig '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' /usr/local/tomcat/conf/catalina.properties
+ cp /usr/local/tomcat/conf/catalina.properties /usr/local/tomcat/conf/catalina.orig
+ rm -f /usr/local/tomcat/conf/catalina.properties
+ sed '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' /usr/local/tomcat/conf/catalina.orig > /usr/local/tomcat/conf/catalina.properties
 fi
 # Then run tomcat if vars are available, else bash shell
 if [[ -n "${DB_NAME}" && -n "${DB_USER}" && -n "${DB_PASS}" ]]; then
  catalina.sh run
 else
- bash
+ echo "Unexpected environment: Set environment properly."
 fi
