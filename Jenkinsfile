@@ -42,7 +42,8 @@ node {
 			// Stop server 
 			dir ('docker-sakai') {
 				// Remove database on monday
-				if (today.get(Calendar.DAY_OF_WEEK)==1) {
+				// Week start on Sunday, and Month in 0
+				if (today.get(Calendar.DAY_OF_WEEK)==2) {
 					sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' down -v'
 				} else {
 					sh 'sudo docker-compose -p ' + env.BRANCH_NAME + ' stop'
