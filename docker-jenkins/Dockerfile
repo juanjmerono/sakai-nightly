@@ -32,7 +32,8 @@ ENV JENKINS_USER admin
 ENV JENKINS_PASS admin
 
 # Skip initial setup
-ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+# Set git plugin timeout to 30 min
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dorg.jenkinsci.plugins.gitclient.Git.timeOut=30
 
 COPY scripts/executors.groovy /usr/share/jenkins/ref/init.groovy.d/
 COPY scripts/default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
