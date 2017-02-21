@@ -22,7 +22,8 @@ fi
 if ! grep -q sakai "/usr/local/tomcat/conf/catalina.properties"; then
  cp /usr/local/tomcat/conf/catalina.properties /usr/local/tomcat/conf/catalina.orig
  rm -f /usr/local/tomcat/conf/catalina.properties
- sed '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' /usr/local/tomcat/conf/catalina.orig > /usr/local/tomcat/conf/catalina.properties
+ sed '/^common.loader=/s@$@,"${catalina.base}/sakai-lib/*.jar"@' /usr/local/tomcat/conf/catalina.orig > /usr/local/tomcat/conf/catalina.beta
+ sed '/^tomcat.util.scan.StandardJarScanFilter.jarsToSkip=/s@\\$@xerces-J_1.4.0.jar,jdbc-se2.0.jar,jndi_1.2.1.jar,jta1.0.1.jar,cglib-full-2.0.2.jar,commons-logging.jar,\\@' /usr/local/tomcat/conf/catalina.beta > /usr/local/tomcat/conf/catalina.properties
 fi
 # Then run tomcat if vars are available, else bash shell
 if [[ -n "${DB_NAME}" && -n "${DB_USER}" && -n "${DB_PASS}" ]]; then

@@ -5,7 +5,7 @@ networks:
       name: nightly_sakai
 services:
   sakai:
-    image: tomcat:8.0.28-jre8
+    image: tomcat:8.0.41-jre8
     ports:
       - "8080"
       - "8025"
