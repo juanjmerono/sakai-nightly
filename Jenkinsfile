@@ -18,6 +18,8 @@ node {
 	def sakai_db_user = env.getProperty('SAKAI_DB_USER')
 	def sakai_db_pass = env.getProperty('SAKAI_DB_PASS')
 	def sakai_db_name = env.getProperty('SAKAI_DB_NAME')
+	def ethpad_host = env.getProperty('ETHERPAD_HOST')
+	def ethpad_api_key = env.getProperty('ETHERPAD_API_KEY')
 
 	if (server_name!=null) {
 
@@ -26,6 +28,54 @@ node {
 		   	dir('sakai') {
 		   		git ( [url: 'https://github.com/sakaiproject/sakai.git', branch: env.BRANCH_NAME] )
 		   	}
+		}
+		
+		def patches_url = ethpad_host + '/p/' + server_name + '.patch/export/txt' 
+		
+		// Get the patches url's from a well-known place (etherpad, gist, gdoc,...)
+		stage ('Get Patches') {
+			try {
+				sh "wget -O patch.properties ${patches_url}"
+			} catch (e) {
+				// Etherpad Patch File not exists
+				println "No patch file available." 
+			}
+		}
+		
+		def props = readProperties file: 'patch.properties'
+		def patches = props['PATCHES']!=null?props['PATCHES'].split(','):[]
+		def errors = ''
+
+	   	// Now apply patches dir:gh-user:branch
+	   	stage ('Apply Patches') {
+	   		// For each url apply patch
+			for (int i=0; i<patches.size(); i++) {
+				ghusrbch = patches[i].split(':')
+				if (ghusrbch.size() == 3 && fileExists(ghusrbch[0])) {
+			   		dir (ghusrbch[0]) {
+			   			try {
+							sh "curl https://github.com/${ghusrbch[1]}/compare/${ghusrbch[2]}.diff | git apply -v"
+							errors = errors + '# Success applying [' + patches[i] + ']\n'
+						} catch (e) {
+				   			// Recover from patch fails and report somewhere
+							errors = errors + '# Fail applying [' + patches[i] + ']: ' + e.toString() + '\n'
+						}
+			   		}
+			   	} else {
+			   		// Unexpected patch format !!
+			   		errors = errors + '# Unexpected format [' + patches[i] + ']: Must be <dir:gh-user/repo:branch>\n'
+			   	}
+		   	}
+		   	def results = '# Add here all the patches you want to apply to master server separated by comma\n' +
+		   				  '# Use format: where:github-user:branch-name\n' +
+		   				  'PATCHES=' + props['PATCHES'] + '\n' + errors
+		   	try {
+				sh "curl --data \"text=${results}&apikey=${ethpad_api_key}&padID=${server_name}.patch\" ${ethpad_host}/api/1/setText"
+			} catch (e) {
+				// Error returning to ethpad
+				println results
+				error("Can't write results to etherpad!!")
+			}
 		}
 		
 		// Now build server

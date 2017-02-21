@@ -13,6 +13,9 @@ To deploy your custom jenkins server you only need docker/docker-compose install
 		- Add some oracle credentials in order to download jdk8.
 			- ORACLE_USER=xxx
 			- ORACLE_PASS=yyy
+		- Add Etherpad configuration.
+			- ETHPAD_URL=...
+			- ETHPAD_API_KEY=...
 		- Also add VIRTUAL_HOST variable with the domain of your jenkins server.
 			- VIRTUAL_HOST=jenkins.mydomain
 		- You're going to create one test server for each branch, so set the server name for that servers.
